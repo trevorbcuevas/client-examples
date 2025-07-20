@@ -69,7 +69,6 @@
       background: #a81d1d;
     }
 
-    /* === HERO SECTION WITH BLURRED BACKGROUND === */
     .hero {
       position: relative;
       text-align: center;
@@ -79,7 +78,6 @@
       z-index: 0;
     }
 
-    /* The original background image is removed from .hero and moved to a ::before */
     .hero::before {
       content: "";
       position: absolute;
@@ -87,7 +85,6 @@
       background: url('https://images.unsplash.com/photo-1604043781255-3fdd8923a8ae?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
       filter: blur(12px) brightness(0.6);
       z-index: -1;
-      /* To prevent image clipping by the blur */
       transform: scale(1.1);
     }
 
@@ -156,10 +153,6 @@
       margin-top: 1rem;
     }
 
-    ul {
-      padding-left: 1.2rem;
-    }
-
     footer {
       background: black;
       color: var(--muted);
@@ -169,7 +162,6 @@
       border-top: 1px solid #333;
     }
 
-    /* Responsive tweaks */
     @media (max-width: 600px) {
       header {
         flex-direction: column;
@@ -182,18 +174,12 @@
       }
     }
 
-    /* =====================
-       WHY CHOOSE SECTION
-       ===================== */
-
-    /* Bigger and centered heading */
     .why-choose h2 {
       text-align: center;
       font-size: 3rem;
       margin-bottom: 1.5rem;
     }
 
-    /* Carousel container */
     .why-choose .info-grid-container {
       overflow: hidden;
       position: relative;
@@ -202,16 +188,14 @@
       margin: 0 auto;
     }
 
-    /* Carousel scrolling flex container */
     .why-choose .info-grid {
       display: flex;
       gap: 1rem;
       padding: 1rem 0;
       animation: scroll-left 30s linear infinite;
-      grid-template-columns: none; /* disable grid */
+      grid-template-columns: none;
     }
 
-    /* Carousel item style */
     .why-choose .info-grid div {
       flex: 0 0 auto;
       background: #222;
@@ -222,16 +206,14 @@
       white-space: nowrap;
     }
 
-    /* Hide scrollbar in container */
     .why-choose .info-grid-container::-webkit-scrollbar {
       display: none;
     }
     .why-choose .info-grid-container {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
-    /* Scroll animation */
     @keyframes scroll-left {
       0% {
         transform: translateX(0%);
@@ -265,9 +247,9 @@
     <h2>Escape Room Adventures</h2>
     <div class="rooms">
       <div class="room-card">
-        <div class="room-image" style="background-image: url('images/house.jpg');"></div>
+        <div class="room-image" style="background-image: url('https://nebula.wsimg.com/6a45a1c0b038eedaeac14fb875a91d79?AccessKeyId=C54CF23FB9346CAB1C60&disposition=0&alloworigin=1');"></div>
         <div class="room-content">
-          <h3>The House</h3>
+          <h3>Grandma's Attic</h3>
           <p>You inherited an old house... but the ghosts won't let you leave unless you play their games.</p>
           <p><strong>Difficulty:</strong> 7/10</p>
           <a href="#" class="btn-primary">Book Now</a>
@@ -275,7 +257,7 @@
       </div>
 
       <div class="room-card">
-        <div class="room-image" style="background-image: url('images/castle.jpg');"></div>
+        <div class="room-image" style="background-image: url('https://nebula.wsimg.com/460a63b255c8e74dc4ac58117524ff10?AccessKeyId=C54CF23FB9346CAB1C60&disposition=0&alloworigin=1');"></div>
         <div class="room-content">
           <h3>The Castle</h3>
           <p>Unravel the wizard's spell inside a cursed castle. Can you free the Kingdom in time?</p>
@@ -285,7 +267,7 @@
       </div>
 
       <div class="room-card">
-        <div class="room-image" style="background-image: url('images/alcatraz.jpg');"></div>
+        <div class="room-image" style="background-image: url('https://nebula.wsimg.com/7ffbf11e077440b07f636296c651054b?AccessKeyId=C54CF23FB9346CAB1C60&disposition=0&alloworigin=1');"></div>
         <div class="room-content">
           <h3>Alcatraz</h3>
           <p>Locked in a high-security prison, you’ve got 60 minutes to escape before the warden returns.</p>
@@ -295,7 +277,7 @@
       </div>
 
       <div class="room-card">
-        <div class="room-image" style="background-image: url('images/museum.jpg');"></div>
+        <div class="room-image" style="background-image: url('https://nebula.wsimg.com/db4842727140452749afaec0635d1f28?AccessKeyId=C54CF23FB9346CAB1C60&disposition=0&alloworigin=1');"></div>
         <div class="room-content">
           <h3>Museum Heist</h3>
           <p>Help detectives recover a stolen Rembrandt painting. Can you solve the case before time runs out?</p>
@@ -319,7 +301,7 @@
         <div>👨‍👩‍👧‍👦 Great for Ages 8+</div>
         <div>📆 Open Daily</div>
 
-        <!-- Duplicate for seamless scroll -->
+        <!-- Loop again for scrolling -->
         <div>🎯 Multiple Rooms Per Game</div>
         <div>💰 $40 Per Person</div>
         <div>📍 Downtown Santa Barbara</div>
@@ -332,6 +314,9 @@
     </div>
   </section>
 
-  <section class="section">
-    <h2>About Us</h2>
-    <p>Designed by set and prop artists, our immersive escape rooms offer thrilling adventures filled with secrets, puzzles, and suspense. You’ll face clever challenges and heart-pounding moments as you race against the clock to escape. Each room is a meticulously crafted experience
+  <footer>
+    <p>&copy; 2025 The House of Clues – Santa Barbara Escape Room</p>
+  </footer>
+
+</body>
+</html>
