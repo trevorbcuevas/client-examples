@@ -41,6 +41,7 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 2px solid var(--primary);
+      position: relative;
     }
 
     header h1 {
@@ -83,6 +84,56 @@
 
     .btn-primary:hover {
       background: #a81d1d;
+    }
+
+    /* Hamburger Button Styles */
+    #hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: var(--primary);
+      cursor: pointer;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Small screens: show hamburger, hide nav menu initially */
+    @media (max-width: 600px) {
+      header {
+        flex-wrap: wrap;
+        padding: 1rem;
+      }
+
+      #hamburger {
+        display: block;
+      }
+
+      nav#nav-menu {
+        display: none;
+        width: 100%;
+        order: 3;
+      }
+
+      nav#nav-menu.open {
+        display: block;
+      }
+
+      nav#nav-menu ul {
+        flex-direction: column;
+        gap: 0;
+        margin-top: 0.5rem;
+      }
+
+      nav#nav-menu ul li {
+        margin: 0;
+      }
+
+      nav#nav-menu ul li a {
+        display: block;
+        padding: 1rem 2rem;
+        border-top: 1px solid #222;
+      }
     }
 
     .hero {
@@ -205,15 +256,9 @@
 
     /* Responsive header nav for small screens */
     @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      nav ul {
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        margin-top: 0.5rem;
-      }
+      /* Already handled hamburger and nav */
+      /* Remove previous header changes for nav */
+      /* Let the hamburger control nav visibility */
     }
 
     /* Why Choose Section */
@@ -283,7 +328,13 @@
 
   <header>
     <h1>The House of Clues</h1>
-    <nav>
+
+    <!-- Hamburger button -->
+    <button id="hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+      &#9776;
+    </button>
+
+    <nav id="nav-menu">
       <ul>
         <li><a href="#">Home</a></li>
         <li><a href="#">FAQ</a></li>
@@ -378,6 +429,17 @@
   <footer>
     <p>&copy; 2025 The House of Clues – Santa Barbara Escape Room</p>
   </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    hamburger.addEventListener('click', () => {
+      const expanded = hamburger.getAttribute('aria-expanded') === 'true' || false;
+      hamburger.setAttribute('aria-expanded', !expanded);
+      navMenu.classList.toggle('open');
+    });
+  </script>
 
 </body>
 </html>
