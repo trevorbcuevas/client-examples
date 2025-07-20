@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>The House of Clues - Santa Barbara Escape Room</title>
+
+  <!-- Google Fonts: Limelight for headings, Special Elite for subtext -->
   <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Special+Elite&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --primary: #d62828;
@@ -21,8 +24,14 @@
       color: var(--text);
     }
 
+    /* Headings use Limelight font */
     h1, h2, h3 {
       font-family: 'Limelight', cursive;
+    }
+
+    /* Subtext (paragraphs) use Special Elite */
+    p {
+      font-family: 'Special Elite', monospace;
     }
 
     header {
@@ -68,6 +77,8 @@
       border-radius: 4px;
       text-decoration: none;
       transition: background 0.3s;
+      font-weight: bold;
+      font-size: 1rem;
     }
 
     .btn-primary:hover {
@@ -109,6 +120,7 @@
       margin-bottom: 3rem;
       position: relative;
       z-index: 1;
+      font-family: 'Limelight', cursive;
     }
 
     .hero .btn-primary {
@@ -159,15 +171,20 @@
     .room-card h3 {
       margin-top: 0;
       color: var(--primary);
+      font-family: 'Limelight', cursive;
     }
 
-    /* Apply Special Elite font to subtext paragraphs */
+    /* Subtext font applied to paragraphs already */
+
+    /* Add spacing below paragraphs (including Difficulty) */
     .room-content p {
-      font-family: 'Special Elite', monospace;
+      margin-bottom: 1rem;
     }
 
+    /* Add spacing between difficulty text and book button */
     .room-content .btn-primary {
-      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
+      display: inline-block;
     }
 
     .info-grid {
@@ -186,6 +203,7 @@
       border-top: 1px solid #333;
     }
 
+    /* Responsive header nav for small screens */
     @media (max-width: 600px) {
       header {
         flex-direction: column;
@@ -198,6 +216,7 @@
       }
     }
 
+    /* Why Choose Section */
     .why-choose h2 {
       text-align: center;
       font-size: 3rem;
@@ -212,6 +231,7 @@
       margin: 0 auto;
     }
 
+    /* Carousel container */
     .why-choose .info-grid {
       display: flex;
       gap: 1rem;
@@ -220,6 +240,7 @@
       grid-template-columns: none;
     }
 
+    /* Carousel items */
     .why-choose .info-grid div {
       flex: 0 0 auto;
       background: #222;
@@ -228,23 +249,32 @@
       border-radius: 6px;
       font-size: 1.1rem;
       white-space: nowrap;
+      font-family: 'Special Elite', monospace; /* subtext font for carousel items */
     }
 
+    /* Hide scrollbar */
     .why-choose .info-grid-container::-webkit-scrollbar {
       display: none;
     }
-
     .why-choose .info-grid-container {
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
 
+    /* Scroll animation */
     @keyframes scroll-left {
       0% {
         transform: translateX(0%);
       }
       100% {
         transform: translateX(-50%);
+      }
+    }
+
+    /* Faster carousel animation on mobile */
+    @media (max-width: 600px) {
+      .why-choose .info-grid {
+        animation-duration: 15s; /* twice as fast on mobile */
       }
     }
   </style>
@@ -271,6 +301,8 @@
   <section class="section">
     <h2>Escape Room Adventures</h2>
     <div class="rooms">
+
+      <!-- Grandma's Attic Room Card -->
       <div class="room-card">
         <div class="room-image" style="background-image: url('https://nebula.wsimg.com/6a45a1c0b038eedaeac14fb875a91d79?AccessKeyId=C54CF23FB9346CAB1C60&disposition=0&alloworigin=1');"></div>
         <div class="room-content">
@@ -281,6 +313,7 @@
         </div>
       </div>
 
+      <!-- The Castle Room Card -->
       <div class="room-card">
         <div class="room-image" style="background-image: url('https://nebula.wsimg.com/460a63b255c8e74dc4ac58117524ff10?AccessKeyId=C54CF23FB9346CAB1C60&disposition=0&alloworigin=1');"></div>
         <div class="room-content">
@@ -291,6 +324,7 @@
         </div>
       </div>
 
+      <!-- Alcatraz Room Card -->
       <div class="room-card">
         <div class="room-image" style="background-image: url('https://nebula.wsimg.com/7ffbf11e077440b07f636296c651054b?AccessKeyId=C54CF23FB9346CAB1C60&disposition=0&alloworigin=1');"></div>
         <div class="room-content">
@@ -301,6 +335,7 @@
         </div>
       </div>
 
+      <!-- Museum Heist Room Card -->
       <div class="room-card">
         <div class="room-image" style="background-image: url('https://nebula.wsimg.com/db4842727140452749afaec0635d1f28?AccessKeyId=C54CF23FB9346CAB1C60&disposition=0&alloworigin=1');"></div>
         <div class="room-content">
@@ -310,13 +345,14 @@
           <a href="#" class="btn-primary">Book Now</a>
         </div>
       </div>
+
     </div>
   </section>
 
   <section class="section why-choose">
     <h2>Why Choose The House of Clues?</h2>
-    <div class="info-grid-container">
-      <div class="info-grid" aria-label="Reasons to choose The House of Clues">
+    <div class="info-grid-container" aria-label="Reasons to choose The House of Clues">
+      <div class="info-grid">
         <div>🎯 Multiple Rooms Per Game</div>
         <div>💰 $40 Per Person</div>
         <div>📍 Downtown Santa Barbara</div>
@@ -326,7 +362,7 @@
         <div>👨‍👩‍👧‍👦 Great for Ages 8+</div>
         <div>📆 Open Daily</div>
 
-        <!-- Loop again for scrolling -->
+        <!-- Loop again for smooth scrolling effect -->
         <div>🎯 Multiple Rooms Per Game</div>
         <div>💰 $40 Per Person</div>
         <div>📍 Downtown Santa Barbara</div>
