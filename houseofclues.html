@@ -278,12 +278,13 @@
 
     /* Carousel container */
     .why-choose .info-grid {
-      display: flex;
-      gap: 1rem;
-      padding: 1rem 0;
-      animation: scroll-left 30s linear infinite;
-      grid-template-columns: none;
-    }
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  width: max-content;
+  animation: scroll-left 30s linear infinite;
+}
+
 
     /* Carousel items */
     .why-choose .info-grid div {
@@ -308,13 +309,14 @@
 
     /* Scroll animation */
     @keyframes scroll-left {
-      0% {
-        transform: translateX(0%);
-      }
-      100% {
-        transform: translateX(-50%);
-      }
-    }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
 
     /* Faster carousel animation on mobile */
     @media (max-width: 600px) {
