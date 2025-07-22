@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ally Detail - Premium Auto Detailing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .hover-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-lift:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3),
+                  0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans">
+
+  <!-- Header -->
+  <header class="bg-gray-800 shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-3xl font-extrabold text-orange-500 tracking-tight">Ally Detail</h1>
+      <nav class="space-x-6 text-lg">
+        <a href="#" class="text-gray-300 hover:text-orange-400 transition">Home</a>
+        <a href="#" class="text-gray-300 hover:text-orange-400 transition">Book</a>
+        <a href="#" class="text-gray-300 hover:text-orange-400 transition">Media</a>
+        <a href="#" class="text-gray-300 hover:text-orange-400 transition">Maintenance</a>
+        <a href="#" class="text-gray-300 hover:text-orange-400 transition">References</a>
+        <a href="#" class="text-gray-300 hover:text-orange-400 transition">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="bg-gray-900 py-16 px-6 text-center border-b border-gray-700">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-4xl font-bold text-orange-500 mb-6">Welcome to Ally Detail</h2>
+      <p class="text-xl leading-relaxed text-gray-300">
+        Now open at <strong>722 Union Street, Santa Barbara</strong> — experience our spacious new shop with high ceilings for Sprinter vans, a luxurious Ally Lounge with coffee bar, big screen TV, fast Wi-Fi, and our shop dog <strong>Frisbee</strong> to greet you.
+      </p>
+    </div>
+  </section>
+
+  <!-- Services with Images -->
+  <section class="py-16 px-6 bg-gray-800">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+
+      <!-- Private Clients -->
+      <div class="bg-gray-700 rounded-2xl hover-lift overflow-hidden">
+        <img src="https://static.wixstatic.com/media/e6a95f_6b9b4235bb074388bfee477d0e64a98a.jpg/v1/fill/w_548,h_256,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/e6a95f_6b9b4235bb074388bfee477d0e64a98a.jpg" alt="Private Clients" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-2xl font-semibold mb-3 text-orange-400">Private Clients</h3>
+          <p class="text-gray-300 mb-5">From a basic wash to full waxing, your car will shine like never before. Because your vehicle represents you.</p>
+          <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-full transition">View Pricing</a>
+        </div>
+      </div>
+
+      <!-- Commercial Clients -->
+      <div class="bg-gray-700 rounded-2xl hover-lift overflow-hidden">
+        <img src="https://static.wixstatic.com/media/e6a95f_4f5fa8afafeb49bba75aeca9f34af312.jpg/v1/fill/w_544,h_256,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/e6a95f_4f5fa8afafeb49bba75aeca9f34af312.jpg" alt="Commercial Clients" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-2xl font-semibold mb-3 text-orange-400">Commercial Clients</h3>
+          <p class="text-gray-300 mb-5">Ask about our Maintenance or Road Ready programs built for businesses with fleets or high-demand schedules.</p>
+          <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-full transition">View Pricing</a>
+        </div>
+      </div>
+
+      <!-- Overnight Detail -->
+      <div class="bg-gray-700 rounded-2xl hover-lift overflow-hidden">
+        <img src="https://static.wixstatic.com/media/e6a95f_f17e201dc27f474fa6dcbf9639998027.jpg/v1/fill/w_544,h_254,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/e6a95f_f17e201dc27f474fa6dcbf9639998027.jpg" alt="Overnight Detail" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-2xl font-semibold mb-3 text-orange-400">Overnight Detail</h3>
+          <p class="text-gray-300 mb-5">Drop off at night, pick up fully detailed in the morning. Perfect for those with no time to spare.</p>
+          <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-full transition">Book It</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 border-t border-gray-800">
+    <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+      <p>© 2015 Tysbenz Productions</p>
+      <div class="space-x-4 mt-2 md:mt-0">
+        <a href="#" class="hover:text-orange-400">Facebook</a>
+        <a href="#" class="hover:text-orange-400">Twitter Clean</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
