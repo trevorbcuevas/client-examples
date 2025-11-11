@@ -826,6 +826,11 @@
         const nav = document.getElementById('nav');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
-                nav.classList.add('bg-slate-900/90', 'backdrop-blur-xl', 'border-b', 'border-blue-500/20', 'shadow-lg');
+                nav.classList.add('bg-slate-900/95', 'backdrop-blur-xl', 'border-b', 'border-blue-500/20', 'shadow-lg');
             } else {
-                nav.class
+                nav.classList.remove('bg-slate-900/95', 'backdrop-blur-xl', 'border-b', 'border-blue-500/20', 'shadow-lg');
+            }
+        });
+    </script>
+</body>
+</html>
