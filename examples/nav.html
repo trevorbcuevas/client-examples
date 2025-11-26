@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Navigation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 1.1em;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-link:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Project Navigation</h1>
+        <div class="nav-links">
+            <a href="https://trevorbcuevas.github.io/main/examples/allydetail.html" class="nav-link">Ally Detail</a>
+            <a href="https://trevorbcuevas.github.io/main/examples/houseofclues.html" class="nav-link">House of Clues</a>
+            <a href="https://trevorbcuevas.github.io/main/examples/kontraband.html" class="nav-link">Kontraband</a>
+            <a href="https://trevorbcuevas.github.io/main/pmdengineer.html" class="nav-link">PMD Engineer</a>
+        </div>
+    </div>
+</body>
+</html>
