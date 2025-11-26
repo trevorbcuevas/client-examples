@@ -1,1 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontraband Retro Games | Vintage Game Store in Corvallis, OR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --neon-pink: #ff006e;
+            --neon-blue: #06ffa5;
+            --neon-purple: #8338ec;
+            --neon-yellow: #ffbe0b;
+            --dark-bg: #0a0e27;
+            --card-bg: #1a1f3a;
+            --text-light: #e0e7ff;
+            --accent-orange: #ff5722;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1433 50%, #0a0e27 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated starfield background */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(255, 0, 110, 0.2);
+            border-bottom: 2px solid var(--neon-pink);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255, 0, 110, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-pink);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 110, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(131, 56, 236, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(6, 255, 165, 0.08) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px rgba(255, 0, 110, 0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(255, 0, 110, 0.8)); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--neon-blue);
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(6, 255, 165, 0.5);
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: white;
+            box-shadow: 0 8px 25px rgba(255, 0, 110, 0.4);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 0, 110, 0.6);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 8px 25px rgba(6, 255, 165, 0.2);
+        }
+
+        .cta-secondary:hover {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(6, 255, 165, 0.4);
+        }
+
+        /* Pixel art decoration */
+        .pixel-decoration {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.3;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Section Styles */
+        section {
+            position: relative;
+            z-index: 2;
+            padding: 5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* Store Section */
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .store-card {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .store-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple), var(--neon-blue));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .store-card:hover::before {
+            opacity: 1;
+        }
+
+        .store-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 0, 110, 0.3);
+        }
+
+        .store-card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .store-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--neon-pink);
+        }
+
+        .store-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .store-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .store-card li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--neon-blue);
+            font-weight: bold;
+        }
+
+        /* Buy/Sell/Trade Section */
+        .trade-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .trade-card {
+            background: linear-gradient(135deg, rgba(131, 56, 236, 0.2), rgba(255, 0, 110, 0.1));
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--neon-purple);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .trade-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(131, 56, 236, 0.4);
+            border-color: var(--neon-pink);
+        }
+
+        .trade-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .trade-card h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--neon-blue);
+        }
+
+        .trade-card p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Gallery Section */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 4/3;
+            border-radius: 15px;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 0, 110, 0.5);
+        }
+
+        .gallery-placeholder {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* Location Section */
+        .location-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .location-info {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 3rem;
+        }
+
+        .info-item {
+            margin-bottom: 2rem;
+        }
+
+        .info-item h3 {
+            font-size: 1.5rem;
+            color: var(--neon-pink);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-item p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            padding-left: 2rem;
+        }
+
+        .map-placeholder {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.2), rgba(131, 56, 236, 0.2));
+            border: 2px solid var(--neon-purple);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* About Section */
+        .about-content {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 3rem;
+            font-size: 1.2rem;
+            line-height: 2;
+            margin-top: 3rem;
+        }
+
+        .about-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .about-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .highlight-card {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(131, 56, 236, 0.1));
+            border: 2px solid var(--neon-pink);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 0, 110, 0.3);
+        }
+
+        .highlight-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-card h4 {
+            font-size: 1.3rem;
+            color: var(--neon-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(26, 31, 58, 0.6));
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--neon-purple);
+            border-radius: 20px;
+            padding: 3rem;
+        }
+
+        .contact-info h3 {
+            font-size: 2rem;
+            color: var(--neon-pink);
+            margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+        }
+
+        .social-links {
+            background: linear-gradient(135deg, rgba(131, 56, 236, 0.2), rgba(6, 255, 165, 0.1));
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .social-links h3 {
+            font-size: 2rem;
+            color: var(--neon-blue);
+            margin-bottom: 2rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(131, 56, 236, 0.5);
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 2;
+            background: rgba(10, 14, 39, 0.95);
+            border-top: 2px solid var(--neon-pink);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        .footer-tagline {
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(10, 14, 39, 0.98);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                border-top: 2px solid var(--neon-pink);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .location-container,
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+
+            .store-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trade-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Starfield Background -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">🎮 KONTRABAND</div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#store">Store</a></li>
+                <li><a href="#trade">Buy/Sell/Trade</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#location">Location</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="pixel-decoration" style="top: 10%; left: 10%;">👾</div>
+        <div class="pixel-decoration" style="top: 20%; right: 15%; animation-delay: 1s;">🕹️</div>
+        <div class="pixel-decoration" style="bottom: 15%; left: 20%; animation-delay: 2s;">🎯</div>
+        <div class="pixel-decoration" style="bottom: 25%; right: 10%; animation-delay: 1.5s;">⭐</div>
+        
+        <div class="hero-content">
+            <h1>KONTRABAND<br>RETRO GAMES</h1>
+            <div class="hero-subtitle">Level Up Your Collection</div>
+            <p class="hero-description">
+                Your local destination for vintage gaming in Corvallis, Oregon. From classic NES cartridges to PS2 gems, 
+                we've got the nostalgia you're looking for. Trade, buy, sell – and relive the golden age of gaming.
+            </p>
+            <div class="cta-buttons">
+                <a href="#store" class="cta-btn cta-primary">Browse Inventory</a>
+                <a href="#trade" class="cta-btn cta-secondary">Sell Your Games</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Store Section -->
+    <section id="store">
+        <div class="section-header">
+            <h2 class="section-title">What We Carry</h2>
+            <p class="section-subtitle">Everything for the retro game enthusiast</p>
+        </div>
+        
+        <div class="store-grid">
+            <div class="store-card">
+                <div class="store-card-icon">🎮</div>
+                <h3>Retro Consoles</h3>
+                <ul>
+                    <li>Nintendo NES & SNES</li>
+                    <li>Sega Genesis & Dreamcast</li>
+                    <li>Nintendo 64 & GameCube</li>
+                    <li>PlayStation 1 & 2</li>
+                    <li>Xbox & Xbox 360</li>
+                    <li>Game Boy & GBA systems</li>
+                </ul>
+            </div>
+
+            <div class="store-card">
+                <div class="store-card-icon">💿</div>
+                <h3>Games & Cartridges</h3>
+                <ul>
+                    <li>Vintage NES/SNES games</li>
+                    <li>Sega Genesis & Saturn titles</li>
+                    <li>N64 & GameCube classics</li>
+                    <li>PS1, PS2 & Xbox games</li>
+                    <li>Handheld game cartridges</li>
+                    <li>Rare & collectible titles</li>
+                </ul>
+            </div>
+
+            <div class="store-card">
+                <div class="store-card-icon">🕹️</div>
+                <h3>Accessories & Parts</h3>
+                <ul>
+                    <li>Original controllers</li>
+                    <li>Memory cards & cables</li>
+                    <li>Power adapters & AV cables</li>
+                    <li>Replacement parts</li>
+                    <li>Protective cases</li>
+                    <li>Cleaning kits</li>
+                </ul>
+            </div>
+
+            <div class="store-card">
+                <div class="store-card-icon">✨</div>
+                <h3>Collectibles & More</h3>
+                <ul>
+                    <li>Trading card games (Pokémon, Magic, Yu-Gi-Oh!)</li>
+                    <li>Gaming figurines & toys</li>
+                    <li>Strategy guides & magazines</li>
+                    <li>Posters & artwork</li>
+                    <li>Collectible game boxes</li>
+                    <li>Limited edition items</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Buy/Sell/Trade Section -->
+    <section id="trade">
+        <div class="section-header">
+            <h2 class="section-title">Buy, Sell & Trade</h2>
+            <p class="section-subtitle">Turn your old games into store credit or cash</p>
+        </div>
+
+        <div class="trade-container">
+            <div class="trade-card">
+                <div class="trade-icon">💰</div>
+                <h3>Sell Your Games</h3>
+                <p>
+                    Got vintage games collecting dust? We offer competitive cash prices for your used games, 
+                    consoles, and accessories. Bring them in for a free quote – we buy everything from single 
+                    cartridges to complete collections.
+                </p>
+            </div>
+
+            <div class="trade-card">
+                <div class="trade-icon">🔄</div>
+                <h3>Trade for Credit</h3>
+                <p>
+                    Get even more value with store credit! Trade in your games and receive up to 25% more in store 
+                    credit than cash offers. Perfect for upgrading your collection or trying something new from 
+                    our extensive inventory.
+                </p>
+            </div>
+
+            <div class="trade-card">
+                <div class="trade-icon">⚖️</div>
+                <h3>Fair Pricing</h3>
+                <p>
+                    We pride ourselves on transparent, fair pricing based on current market values. Our knowledgeable 
+                    staff evaluates each item honestly, considering condition, rarity, and demand. No hidden fees, 
+                    no surprises – just fair deals.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <div class="section-header">
+            <h2 class="section-title">Store Gallery</h2>
+            <p class="section-subtitle">Take a peek inside Kontraband</p>
+        </div>
+
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <div class="gallery-placeholder">Shelves of Retro Games</div>
+            </div>
+            <div class="gallery-item">
+                <div class="gallery-placeholder">Console Display</div>
+            </div>
+            <div class="gallery-item">
+                <div class="gallery-placeholder">Classic Game Collection</div>
+            </div>
+            <div class="gallery-item">
+                <div class="gallery-placeholder">Happy Customers</div>
+            </div>
+            <div class="gallery-item">
+                <div class="gallery-placeholder">Trading Card Selection</div>
+            </div>
+            <div class="gallery-item">
+                <div class="gallery-placeholder">Vintage Controllers</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem; color: var(--neon-blue); font-size: 1.1rem;">
+            📸 Visit us in-store to see our full collection in person!
+        </div>
+    </section>
+
+    <!-- Location & Hours -->
+    <section id="location">
+        <div class="section-header">
+            <h2 class="section-title">Location & Hours</h2>
+            <p class="section-subtitle">Find us in Corvallis, Oregon</p>
+        </div>
+
+        <div class="location-container">
+            <div class="location-info">
+                <div class="info-item">
+                    <h3>📍 Address</h3>
+                    <p>
+                        123 Retro Boulevard<br>
+                        Corvallis, OR 97330
+                    </p>
+                </div>
+
+                <div class="info-item">
+                    <h3>📞 Phone</h3>
+                    <p>(541) 555-GAME (4263)</p>
+                </div>
+
+                <div class="info-item">
+                    <h3>🕐 Store Hours</h3>
+                    <p>
+                        Monday – Friday: 11:00 AM – 7:00 PM<br>
+                        Saturday: 10:00 AM – 8:00 PM<br>
+                        Sunday: 12:00 PM – 6:00 PM
+                    </p>
+                </div>
+
+                <div class="info-item">
+                    <h3>🚗 Parking</h3>
+                    <p>
+                        Free parking available in front of the store and in the adjacent lot.
+                    </p>
+                </div>
+            </div>
+
+            <div class="map-placeholder">
+                <div>
+                    🗺️<br><br>
+                    <strong>Map Location</strong><br><br>
+                    [Insert Google Maps embed here]<br><br>
+                    Come visit us in the heart of Corvallis!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-header">
+            <h2 class="section-title">About Kontraband</h2>
+            <p class="section-subtitle">More than just a store – we're a gaming community</p>
+        </div>
+
+        <div class="about-content">
+            <p>
+                <strong>Welcome to Kontraband Retro Games!</strong> We're not just another game store – we're a 
+                passionate community of gamers, collectors, and nostalgia enthusiasts right here in Corvallis, Oregon.
+            </p>
+            <p>
+                Since opening our doors, we've been dedicated to preserving gaming history and making classic titles 
+                accessible to everyone. Whether you're hunting for that childhood favorite, building a collection, 
+                or discovering retro gaming for the first time, our knowledgeable staff is here to help.
+            </p>
+            <p>
+                We believe in fair pricing, honest service, and creating a welcoming space where gamers of all ages 
+                can connect over their shared love of gaming. From hardcore collectors to casual players, everyone 
+                has a place at Kontraband.
+            </p>
+        </div>
+
+        <div class="about-highlights">
+            <div class="highlight-card">
+                <div class="highlight-icon">🎯</div>
+                <h4>Expert Staff</h4>
+                <p>Knowledgeable gamers who love what they do</p>
+            </div>
+
+            <div class="highlight-card">
+                <div class="highlight-icon">🤝</div>
+                <h4>Community Focused</h4>
+                <p>A local hub for gaming enthusiasts</p>
+            </div>
+
+            <div class="highlight-card">
+                <div class="highlight-icon">💎</div>
+                <h4>Quality Selection</h4>
+                <p>Carefully curated retro games and systems</p>
+            </div>
+
+            <div class="highlight-card">
+                <div class="highlight-icon">⚡</div>
+                <h4>Fair Prices</h4>
+                <p>Competitive rates for buying and selling</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-header">
+            <h2 class="section-title">Get in Touch</h2>
+            <p class="section-subtitle">We'd love to hear from you!</p>
+        </div>
+
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Contact Information</h3>
+                
+                <div class="contact-item">
+                    <span class="contact-icon">📞</span>
+                    <div>
+                        <strong>Phone:</strong><br>
+                        (541) 555-GAME (4263)
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span class="contact-icon">✉️</span>
+                    <div>
+                        <strong>Email:</strong><br>
+                        info@kontrabandgames.com
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span class="contact-icon">📍</span>
+                    <div>
+                        <strong>Address:</strong><br>
+                        123 Retro Boulevard<br>
+                        Corvallis, OR 97330
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span class="contact-icon">💬</span>
+                    <div>
+                        <strong>Questions?</strong><br>
+                        Call or visit us during store hours!
+                    </div>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <h3>Follow Us</h3>
+                <p style="margin-bottom: 2rem;">
+                    Stay updated on new arrivals, special events, and exclusive deals!
+                </p>
+                
+                <div class="social-buttons">
+                    <a href="#" class="social-btn">
+                        📷 Instagram
+                    </a>
+                    <a href="#" class="social-btn">
+                        👍 Facebook
+                    </a>
+                    <a href="#" class="social-btn">
+                        🐦 Twitter
+                    </a>
+                </div>
+
+                <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--text-light);">
+                    Tag us in your gaming setups and collection photos! #KontrabandGames
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p class="footer-tagline">🎮 Power Up Your Collection 🕹️</p>
+        <p>&copy; 2024 Kontraband Retro Games | Corvallis, Oregon</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--neon-blue);">
+            Preserving Gaming History, One Cartridge at a Time
+        </p>
+    </footer>
+
+    <script>
+        // Generate starfield
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numberOfStars = 100;
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                const navLinks = document.getElementById('navLinks');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Initialize stars on page load
+        window.addEventListener('load', createStars);
+
+        // Smooth scroll with offset for fixed nav
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 80;
+                    const targetPosition = target.offsetTop - offset;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to navigation
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                nav.style.boxShadow = '0 4px 30px rgba(255, 0, 110, 0.4)';
+            } else {
+                nav.style.boxShadow = '0 4px 20px rgba(255, 0, 110, 0.2)';
+            }
+
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
