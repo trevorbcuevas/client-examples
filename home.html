@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Web Design Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000000;
+            --secondary: #ffffff;
+            --gray: #6b7280;
+            --light-gray: #f5f5f7;
+            --accent: #2563eb;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--primary);
+            background: var(--secondary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+        }
+
+        h3 {
+            font-size: clamp(1.25rem, 2vw, 1.75rem);
+        }
+
+        p {
+            font-size: clamp(1rem, 1.5vw, 1.125rem);
+            color: var(--gray);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--primary);
+            color: var(--secondary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--secondary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero h1 {
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero p {
+            font-size: clamp(1.125rem, 2vw, 1.5rem);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .hero .btn {
+            animation: fadeInUp 1s ease 0.6s forwards;
+            opacity: 0;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 8rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-header h2 {
+            margin-bottom: 1rem;
+        }
+
+        /* Services Section */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .service-card {
+            padding: 3rem 2rem;
+            background: var(--light-gray);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .service-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .service-card h3 {
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            font-size: 1rem;
+        }
+
+        /* Portfolio Section */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .portfolio-item {
+            position: relative;
+            aspect-ratio: 16/10;
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--light-gray);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.5s ease;
+        }
+
+        .portfolio-item.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .portfolio-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        .portfolio-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .portfolio-item:hover .portfolio-image {
+            transform: scale(1.05);
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            transform: translateY(0);
+        }
+
+        .portfolio-overlay h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-overlay p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* Why Choose Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .feature-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover .feature-icon {
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        .feature-item h3 {
+            margin-bottom: 1rem;
+        }
+
+        /* Testimonials */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .testimonial-card {
+            padding: 3rem;
+            background: var(--light-gray);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .testimonial-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .testimonial-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        .testimonial-quote {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        /* CTA Banner */
+        .cta-banner {
+            background: var(--primary);
+            color: var(--secondary);
+            text-align: center;
+            padding: 6rem 2rem;
+            border-radius: 30px;
+            margin: 4rem 2rem;
+        }
+
+        .cta-banner h2 {
+            color: var(--secondary);
+            margin-bottom: 2rem;
+        }
+
+        .cta-banner .btn {
+            background: var(--secondary);
+            color: var(--primary);
+            border-color: var(--secondary);
+        }
+
+        .cta-banner .btn:hover {
+            background: var(--light-gray);
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--light-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--primary);
+            color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .footer-copyright {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .services-grid,
+            .portfolio-grid,
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">[Your Studio Name]</a>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#why">Why Us</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Beautiful. Modern.<br>Built to Convert.</h1>
+            <p>We design high-performance, custom websites that elevate your brand and drive real results. Clean. Minimal. Unforgettable.</p>
+            <a href="#contact" class="btn">Start Your Website</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="section-header">
+            <h2>What We Do</h2>
+            <p>Premium design services tailored to your business</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">✦</div>
+                <h3>Custom Website Design</h3>
+                <p>Bespoke websites crafted from scratch to perfectly match your brand identity and business goals. Every pixel intentional.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">⟲</div>
+                <h3>Website Rebuilds</h3>
+                <p>Transform your outdated site into a modern masterpiece. We rebuild with purpose, performance, and premium aesthetics.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">◈</div>
+                <h3>Branding + UI/UX</h3>
+                <p>Cohesive brand experiences that connect with your audience. Beautiful interfaces designed for human interaction.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio">
+        <div class="section-header">
+            <h2>Recent Work</h2>
+            <p>Websites we're proud of</p>
+        </div>
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop" alt="Project 1" class="portfolio-image">
+                <div class="portfolio-overlay">
+                    <h3>Tech Startup</h3>
+                    <p>Modern SaaS platform with clean design</p>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?w=800&h=500&fit=crop" alt="Project 2" class="portfolio-image">
+                <div class="portfolio-overlay">
+                    <h3>Architecture Firm</h3>
+                    <p>Minimal portfolio showcasing luxury projects</p>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&h=500&fit=crop" alt="Project 3" class="portfolio-image">
+                <div class="portfolio-overlay">
+                    <h3>E-commerce Brand</h3>
+                    <p>High-converting store with premium feel</p>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=500&fit=crop" alt="Project 4" class="portfolio-image">
+                <div class="portfolio-overlay">
+                    <h3>Creative Agency</h3>
+                    <p>Bold, interactive brand experience</p>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=500&fit=crop" alt="Project 5" class="portfolio-image">
+                <div class="portfolio-overlay">
+                    <h3>Financial Services</h3>
+                    <p>Trust-building corporate website</p>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=800&h=500&fit=crop" alt="Project 6" class="portfolio-image">
+                <div class="portfolio-overlay">
+                    <h3>Health & Wellness</h3>
+                    <p>Calm, inviting digital presence</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section id="why">
+        <div class="section-header">
+            <h2>Why Choose Us</h2>
+            <p>What sets us apart</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">✱</div>
+                <h3>Modern + Minimal Design</h3>
+                <p>Clean aesthetics that put your content first and make lasting impressions.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⚡</div>
+                <h3>Fast Turnaround</h3>
+                <p>Efficient process without compromising quality. Your site, delivered on time.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📈</div>
+                <h3>Conversion-Focused</h3>
+                <p>Beautiful design meets strategic thinking. Every element drives results.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">◆</div>
+                <h3>Tailored to Your Brand</h3>
+                <p>No templates. No shortcuts. Just custom work that reflects who you are.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials">
+        <div class="section-header">
+            <h2>Client Love</h2>
+            <p>What people are saying</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"The attention to detail is unmatched. Our new site perfectly captures our brand and has increased conversions by 40%."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SR</div>
+                    <div class="author-info">
+                        <h4>Sarah Rodriguez</h4>
+                        <p>CEO, TechFlow</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"Working with them was seamless. They delivered a stunning website that exceeded our expectations in every way."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MJ</div>
+                    <div class="author-info">
+                        <h4>Michael Johnson</h4>
+                        <p>Founder, Urban Spaces</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"Finally, a design that feels premium and actually converts. Our traffic has doubled since launch."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">EL</div>
+                    <div class="author-info">
+                        <h4>Emily Liu</h4>
+                        <p>Director, Zenith Capital</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section id="contact">
+        <div class="cta-banner">
+            <h2>Ready for a website that<br>actually impresses?</h2>
+            <a href="mailto:hello@yourstudio.com" class="btn">Book Your Build</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">[Your Studio Name]</div>
+            <div class="footer-links">
+                <a href="#services">Services</a>
+                <a href="#portfolio">Portfolio</a>
+                <a href="#why">Why Us</a>
+                <a href="#testimonials">Testimonials</a>
+                <a href="mailto:hello@yourstudio.com">Contact</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon">in</a>
+                <a href="#" class="social-icon">tw</a>
+                <a href="#" class="social-icon">ig</a>
+                <a href="#" class="social-icon">dr</a>
+            </div>
+            <p class="footer-copyright">© 2024 Your Studio Name. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.service-card, .portfolio-item, .feature-item, .testimonial-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
