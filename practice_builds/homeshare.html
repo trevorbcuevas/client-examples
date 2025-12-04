@@ -1,0 +1,2071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Roommate Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #007AFF;
+            --primary-dark: #0051D5;
+            --success: #34C759;
+            --warning: #FF9500;
+            --danger: #FF3B30;
+            --premium-gold: #FFD60A;
+            
+            /* Light mode */
+            --bg: #F2F2F7;
+            --bg-secondary: #FFFFFF;
+            --bg-tertiary: #F2F2F7;
+            --text: #000000;
+            --text-secondary: #8E8E93;
+            --border: #C6C6C8;
+            --separator: rgba(60, 60, 67, 0.36);
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --overlay: rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="dark"] {
+            --bg: #000000;
+            --bg-secondary: #1C1C1E;
+            --bg-tertiary: #2C2C2E;
+            --text: #FFFFFF;
+            --text-secondary: #8E8E93;
+            --border: #38383A;
+            --separator: rgba(84, 84, 88, 0.65);
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --overlay: rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            padding-bottom: env(safe-area-inset-bottom);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            padding: max(env(safe-area-inset-top), 12px) 16px 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 0.5px solid var(--separator);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: var(--bg-tertiary);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .icon-btn:active {
+            transform: scale(0.95);
+            opacity: 0.7;
+        }
+
+        .icon-btn.notification-badge::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        .premium-badge-btn {
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--premium-gold), #FFA000);
+            color: #000;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 12px 16px;
+            background: var(--bg);
+            position: sticky;
+            top: 65px;
+            z-index: 99;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.97);
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-btn.premium-locked::after {
+            content: '🔒';
+            font-size: 11px;
+            margin-left: 4px;
+        }
+
+        /* Container */
+        .container {
+            padding: 0 16px 80px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(10px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card.premium-locked {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .card.premium-locked::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--overlay);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 16px;
+            z-index: 1;
+        }
+
+        .card.premium-locked::after {
+            content: '🔒 Premium Feature';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, var(--premium-gold), #FFA000);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 2;
+            font-size: 14px;
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        /* Form Elements */
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            background: var(--bg-tertiary);
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--bg-secondary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, var(--premium-gold), #FFA000);
+            color: #000;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            width: auto;
+        }
+
+        /* List Items */
+        .expense-item,
+        .chore-item,
+        .supply-item,
+        .message-item,
+        .event-item {
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .expense-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .expense-title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+
+        .expense-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .expense-amount {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .expense-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+
+        /* Settings Styles */
+        .settings-group {
+            margin-bottom: 24px;
+        }
+
+        .settings-group-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 16px;
+        }
+
+        .settings-item {
+            background: var(--bg-secondary);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 0.5px solid var(--separator);
+        }
+
+        .settings-item:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .settings-item.single {
+            border-radius: 12px;
+        }
+
+        .settings-item-content {
+            flex: 1;
+        }
+
+        .settings-item-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .settings-item-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .settings-item-icon {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 51px;
+            height: 31px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            transition: 0.3s;
+            border-radius: 31px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 27px;
+            width: 27px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--success);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--overlay);
+            z-index: 1000;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        @keyframes slideUp {
+            from { 
+                transform: translateY(100%); 
+            }
+            to { 
+                transform: translateY(0); 
+            }
+        }
+
+        .modal-header {
+            padding: 20px 16px;
+            border-bottom: 0.5px solid var(--separator);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            background: var(--bg-tertiary);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px 16px;
+        }
+
+        /* Premium Modal */
+        .premium-icon {
+            font-size: 60px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .premium-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .premium-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 16px;
+            margin-bottom: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--success);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 60px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.success {
+            background: rgba(52, 199, 89, 0.15);
+            color: var(--success);
+        }
+
+        .status-badge.warning {
+            background: rgba(255, 149, 0, 0.15);
+            color: var(--warning);
+        }
+
+        .status-badge.danger {
+            background: rgba(255, 59, 48, 0.15);
+            color: var(--danger);
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            padding: 10px 16px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .checkbox-label:active {
+            transform: scale(0.97);
+        }
+
+        .checkbox-label input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Roommate Tags */
+        .roommate-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .roommate-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            font-size: 15px;
+        }
+
+        .remove-roommate {
+            cursor: pointer;
+            color: var(--danger);
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        /* Chore Items */
+        .chore-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chore-item.done {
+            opacity: 0.6;
+        }
+
+        .chore-item.due-today {
+            border-left: 3px solid var(--warning);
+        }
+
+        .chore-item.overdue {
+            border-left: 3px solid var(--danger);
+        }
+
+        .chore-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chore-name {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+
+        .chore-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .chore-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Supply Items */
+        .supply-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .supply-item.low {
+            border-left: 3px solid var(--warning);
+        }
+
+        .supply-item.out {
+            border-left: 3px solid var(--danger);
+        }
+
+        .supply-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .supply-name {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+
+        .supply-status {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .supply-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Messages */
+        .message-item {
+            position: relative;
+        }
+
+        .message-item.pinned {
+            border-left: 3px solid var(--premium-gold);
+            background: linear-gradient(90deg, rgba(255, 214, 10, 0.1), transparent);
+        }
+
+        .message-text {
+            margin-bottom: 8px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .message-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .pin-icon {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 18px;
+        }
+
+        /* Balance Cards */
+        .balance-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .balance-item {
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .balance-name {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .balance-amount {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .balance-amount.positive {
+            color: var(--success);
+        }
+
+        .balance-amount.negative {
+            color: var(--danger);
+        }
+
+        /* Flex Row */
+        .flex-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .flex-row .input-group {
+            flex: 1;
+        }
+
+        /* Haptic Feedback Class */
+        .haptic {
+            transition: transform 0.1s;
+        }
+
+        .haptic:active {
+            transform: scale(0.97);
+        }
+
+        /* Safe Area */
+        @supports (padding: max(0px)) {
+            body {
+                padding-top: env(safe-area-inset-top);
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+
+        /* Version Badge */
+        .version-badge {
+            text-align: center;
+            padding: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Notification Dot */
+        .notification-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--danger);
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>🏠 Roommate Hub</h1>
+            <div class="header-actions">
+                <button class="icon-btn" id="notifications-btn" onclick="showNotifications()">
+                    <span>🔔</span>
+                </button>
+                <button class="icon-btn" onclick="showSettings()">
+                    <span>⚙️</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav">
+        <button class="nav-btn active haptic" data-section="expenses">Expenses</button>
+        <button class="nav-btn haptic" data-section="chores">Chores</button>
+        <button class="nav-btn premium-locked haptic" data-section="calendar">Calendar</button>
+        <button class="nav-btn haptic" data-section="supplies">Supplies</button>
+        <button class="nav-btn haptic" data-section="messages">Messages</button>
+        <button class="nav-btn haptic" data-section="roommates">Roommates</button>
+    </nav>
+
+    <div class="container">
+        <!-- EXPENSES SECTION -->
+        <section id="expenses" class="section active">
+            <div class="card">
+                <h2>Add Expense</h2>
+                <div class="input-group">
+                    <label>Expense Title</label>
+                    <input type="text" id="expense-title" placeholder="e.g., Groceries, Internet Bill">
+                </div>
+                <div class="input-group" id="category-group">
+                    <label>Category 🔒</label>
+                    <select id="expense-category" disabled>
+                        <option value="">Premium Feature</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Amount ($)</label>
+                    <input type="number" id="expense-amount" placeholder="0.00" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label>Who Paid?</label>
+                    <select id="expense-payer"></select>
+                </div>
+                <div class="input-group">
+                    <label>Split Between:</label>
+                    <div class="checkbox-group" id="expense-split"></div>
+                </div>
+                <button class="btn btn-primary haptic" onclick="addExpense()">Add Expense</button>
+            </div>
+
+            <div class="card premium-locked" id="balance-card" onclick="showPremiumModal()">
+                <h2>🔒 Balance Summary</h2>
+                <div class="balance-card" id="balance-summary"></div>
+            </div>
+
+            <div class="card">
+                <h2>Recent Expenses</h2>
+                <div id="expense-list"></div>
+            </div>
+        </section>
+
+        <!-- CHORES SECTION -->
+        <section id="chores" class="section">
+            <div class="card">
+                <h2>Add Chore</h2>
+                <div class="input-group">
+                    <label>Chore Name</label>
+                    <input type="text" id="chore-name" placeholder="e.g., Kitchen, Bathroom">
+                </div>
+                <div class="input-group">
+                    <label>Assigned To</label>
+                    <select id="chore-assigned"></select>
+                </div>
+                <div class="input-group">
+                    <label>Due Date</label>
+                    <input type="date" id="chore-date">
+                </div>
+                <div class="input-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="chore-recurring">
+                        Recurring Weekly
+                    </label>
+                </div>
+                <button class="btn btn-primary haptic" onclick="addChore()">Add Chore</button>
+            </div>
+
+            <div class="card">
+                <h2>This Week's Chores</h2>
+                <div id="chore-list"></div>
+            </div>
+        </section>
+
+        <!-- CALENDAR SECTION -->
+        <section id="calendar" class="section premium-locked" onclick="showPremiumModal()">
+            <div class="card">
+                <h2>🔒 Calendar</h2>
+                <p style="color: var(--text-secondary);">Premium feature - Upgrade to access full calendar</p>
+            </div>
+        </section>
+
+        <!-- SUPPLIES SECTION -->
+        <section id="supplies" class="section">
+            <div class="card">
+                <h2>Add Supply</h2>
+                <div class="input-group">
+                    <label>Supply Name</label>
+                    <input type="text" id="supply-name" placeholder="e.g., Toilet Paper, Dish Soap">
+                </div>
+                <div class="input-group">
+                    <label>Quantity</label>
+                    <input type="number" id="supply-quantity" value="10" min="0">
+                </div>
+                <div class="input-group">
+                    <label>Low Stock Threshold</label>
+                    <input type="number" id="supply-threshold" value="3" min="0">
+                </div>
+                <button class="btn btn-primary haptic" onclick="addSupply()">Add Supply</button>
+            </div>
+
+            <div class="card">
+                <h2>Inventory</h2>
+                <div id="supply-list"></div>
+            </div>
+        </section>
+
+        <!-- MESSAGES SECTION -->
+        <section id="messages" class="section">
+            <div class="card">
+                <h2>Post Message</h2>
+                <div class="input-group">
+                    <label>Your Name</label>
+                    <select id="message-author"></select>
+                </div>
+                <div class="input-group">
+                    <label>Message</label>
+                    <textarea id="message-text" placeholder="Leave a note for your roommates..."></textarea>
+                </div>
+                <button class="btn btn-primary haptic" onclick="addMessage()">Post Message</button>
+            </div>
+
+            <div class="card">
+                <h2>Messages</h2>
+                <div id="message-list"></div>
+            </div>
+        </section>
+
+        <!-- ROOMMATES SECTION -->
+        <section id="roommates" class="section">
+            <div class="card">
+                <h2>Manage Roommates</h2>
+                <div class="flex-row">
+                    <div class="input-group">
+                        <label>Roommate Name</label>
+                        <input type="text" id="roommate-name" placeholder="Enter name">
+                    </div>
+                    <button class="btn btn-primary haptic" style="flex-shrink: 0;" onclick="addRoommate()">Add</button>
+                </div>
+                <div id="roommate-limit-warning" style="display: none; color: var(--danger); font-size: 14px; margin-top: 8px;">
+                    Free tier limited to 3 roommates. <a href="#" onclick="showPremiumModal(); return false;" style="color: var(--premium-gold); font-weight: 600;">Upgrade to Premium</a>
+                </div>
+                <div class="roommate-list" id="roommate-list"></div>
+            </div>
+
+            <div class="card">
+                <h2>About</h2>
+                <p style="color: var(--text-secondary); font-size: 15px; line-height: 1.6; margin-bottom: 16px;">
+                    Roommate Hub helps you manage shared expenses, chores, supplies, and communication all in one place.
+                </p>
+                <div id="plan-display" style="padding: 16px; background: var(--bg-tertiary); border-radius: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 15px; color: var(--text-secondary); margin-bottom: 4px;">Current Plan</div>
+                    <div id="plan-name" style="font-size: 18px; font-weight: 600;"></div>
+                </div>
+                <button class="btn btn-premium haptic" onclick="showPremiumModal()">View Premium Features</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="modal-close haptic" onclick="closeSettings()">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Account Section -->
+                <div class="settings-group">
+                    <div class="settings-group-title">Account</div>
+                    <div class="settings-item single" style="display: flex; align-items: center;">
+                        <span class="settings-item-icon">⭐</span>
+                        <div class="settings-item-content">
+                            <div class="settings-item-title">Subscription</div>
+                            <div class="settings-item-description" id="subscription-status">Free Plan</div>
+                        </div>
+                        <button class="btn btn-premium btn-small haptic" onclick="showPremiumModal()">Upgrade</button>
+                    </div>
+                </div>
+
+                <!-- Appearance Section -->
+                <div class="settings-group">
+                    <div class="settings-group-title">Appearance</div>
+                    <div class="settings-item" style="display: flex; align-items: center;">
+                        <span class="settings-item-icon">🌓</span>
+                        <div class="settings-item-content">
+                            <div class="settings-item-title">Dark Mode</div>
+                            <div class="settings-item-description">Automatically adjust appearance</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Notifications Section -->
+                <div class="settings-group">
+                    <div class="settings-group-title">Notifications</div>
+                    <div class="settings-item">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">🔔</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Push Notifications</div>
+                                <div class="settings-item-description">Receive alerts for new updates</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="push-notifications" checked onchange="saveSettings()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-item">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">💰</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Expense Alerts</div>
+                                <div class="settings-item-description">Notify when expenses are added</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="expense-alerts" checked onchange="saveSettings()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-item">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">🧹</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Chore Reminders</div>
+                                <div class="settings-item-description">Remind me of upcoming chores</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="chore-reminders" checked onchange="saveSettings()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-item">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">📦</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Low Stock Alerts</div>
+                                <div class="settings-item-description">Notify when supplies run low</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="stock-alerts" checked onchange="saveSettings()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data & Privacy Section -->
+                <div class="settings-group">
+                    <div class="settings-group-title">Data & Privacy</div>
+                    <div class="settings-item">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">☁️</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Cloud Sync</div>
+                                <div class="settings-item-description">Premium feature</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="cloud-sync" disabled>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-item" onclick="exportData()">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">📤</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Export Data</div>
+                                <div class="settings-item-description">Download all your data</div>
+                            </div>
+                            <span style="color: var(--text-secondary);">›</span>
+                        </div>
+                    </div>
+                    <div class="settings-item" onclick="confirmClearData()">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">🗑️</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Clear All Data</div>
+                                <div class="settings-item-description">Reset the app</div>
+                            </div>
+                            <span style="color: var(--danger);">›</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Section -->
+                <div class="settings-group">
+                    <div class="settings-group-title">About</div>
+                    <div class="settings-item">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">ℹ️</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Version</div>
+                                <div class="settings-item-description">1.0.0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-item" onclick="showFeedback()">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">💬</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Send Feedback</div>
+                                <div class="settings-item-description">Help us improve</div>
+                            </div>
+                            <span style="color: var(--text-secondary);">›</span>
+                        </div>
+                    </div>
+                    <div class="settings-item" onclick="showPrivacy()">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">🔒</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Privacy Policy</div>
+                            </div>
+                            <span style="color: var(--text-secondary);">›</span>
+                        </div>
+                    </div>
+                    <div class="settings-item" onclick="showTerms()">
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <span class="settings-item-icon">📄</span>
+                            <div class="settings-item-content">
+                                <div class="settings-item-title">Terms of Service</div>
+                            </div>
+                            <span style="color: var(--text-secondary);">›</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="version-badge">
+                    Roommate Hub © 2024<br>
+                    Made with ❤️ for better living
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATIONS MODAL -->
+    <div class="modal" id="notifications-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Notifications</h2>
+                <button class="modal-close haptic" onclick="closeNotifications()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="notifications-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PREMIUM MODAL -->
+    <div class="modal" id="premium-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Go Premium</h2>
+                <button class="modal-close haptic" onclick="closePremiumModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="premium-icon">✨</div>
+                <div class="premium-title">Upgrade to Premium</div>
+                <div class="premium-subtitle">Unlock all features and take control</div>
+                
+                <ul class="feature-list">
+                    <li>Unlimited roommates</li>
+                    <li>Automated expense balancing</li>
+                    <li>Smart chore rotation</li>
+                    <li>Full calendar access</li>
+                    <li>Auto-generated shopping lists</li>
+                    <li>Low-stock alerts</li>
+                    <li>Priority support</li>
+                    <li>Cloud sync across devices</li>
+                    <li>Custom categories & tags</li>
+                    <li>Advanced analytics</li>
+                </ul>
+
+                <div class="modal-actions">
+                    <button class="btn btn-premium haptic" onclick="simulatePremiumUpgrade()">
+                        ⭐ Upgrade Now - $4.99/month
+                    </button>
+                    <button class="btn btn-secondary haptic" onclick="closePremiumModal()">Maybe Later</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PREMIUM STATUS
+        let isPremium = JSON.parse(localStorage.getItem('isPremium')) || false;
+
+        // DATA STORAGE
+        let roommates = JSON.parse(localStorage.getItem('roommates')) || [];
+        let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+        let chores = JSON.parse(localStorage.getItem('chores')) || [];
+        let supplies = JSON.parse(localStorage.getItem('supplies')) || [];
+        let messages = JSON.parse(localStorage.getItem('messages')) || [];
+        let settings = JSON.parse(localStorage.getItem('settings')) || {
+            darkMode: false,
+            pushNotifications: true,
+            expenseAlerts: true,
+            choreReminders: true,
+            stockAlerts: true
+        };
+        let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+
+        // Constants
+        const FREE_ROOMMATE_LIMIT = 3;
+        const EXPENSE_CATEGORIES = ['Groceries', 'Utilities', 'Rent', 'Entertainment', 'Household', 'Other'];
+
+        // SETTINGS FUNCTIONS
+        function showSettings() {
+            document.getElementById('settings-modal').classList.add('active');
+            loadSettings();
+        }
+
+        function closeSettings() {
+            document.getElementById('settings-modal').classList.remove('active');
+        }
+
+        function loadSettings() {
+            document.getElementById('dark-mode-toggle').checked = settings.darkMode;
+            document.getElementById('push-notifications').checked = settings.pushNotifications;
+            document.getElementById('expense-alerts').checked = settings.expenseAlerts;
+            document.getElementById('chore-reminders').checked = settings.choreReminders;
+            document.getElementById('stock-alerts').checked = settings.stockAlerts;
+            
+            const subscriptionStatus = document.getElementById('subscription-status');
+            subscriptionStatus.textContent = isPremium ? 'Premium - Active' : 'Free Plan';
+        }
+
+        function saveSettings() {
+            settings = {
+                darkMode: document.getElementById('dark-mode-toggle').checked,
+                pushNotifications: document.getElementById('push-notifications').checked,
+                expenseAlerts: document.getElementById('expense-alerts').checked,
+                choreReminders: document.getElementById('chore-reminders').checked,
+                stockAlerts: document.getElementById('stock-alerts').checked
+            };
+            localStorage.setItem('settings', JSON.stringify(settings));
+        }
+
+        function toggleDarkMode() {
+            settings.darkMode = document.getElementById('dark-mode-toggle').checked;
+            applyTheme();
+            saveSettings();
+        }
+
+        function applyTheme() {
+            if (settings.darkMode) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+        }
+
+        function exportData() {
+            const data = {
+                roommates,
+                expenses,
+                chores,
+                supplies,
+                messages,
+                exportDate: new Date().toISOString()
+            };
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `roommate-hub-data-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            addNotification('📤 Data exported successfully', 'success');
+        }
+
+        function confirmClearData() {
+            if (confirm('⚠️ Are you sure you want to clear all data? This cannot be undone.')) {
+                if (confirm('This will delete all roommates, expenses, chores, supplies, and messages. Continue?')) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            }
+        }
+
+        function showFeedback() {
+            alert('💬 Thank you for your feedback! In a full version, this would open a feedback form.');
+        }
+
+        function showPrivacy() {
+            alert('🔒 Privacy Policy\n\nYour data is stored locally on your device. We do not collect or share your personal information.');
+        }
+
+        function showTerms() {
+            alert('📄 Terms of Service\n\nBy using Roommate Hub, you agree to our terms and conditions. This is a demo application.');
+        }
+
+        // NOTIFICATIONS
+        function showNotifications() {
+            document.getElementById('notifications-modal').classList.add('active');
+            renderNotifications();
+            markNotificationsAsRead();
+        }
+
+        function closeNotifications() {
+            document.getElementById('notifications-modal').classList.remove('active');
+        }
+
+        function addNotification(message, type = 'info') {
+            const notification = {
+                id: Date.now(),
+                message,
+                type,
+                date: new Date().toISOString(),
+                read: false
+            };
+            notifications.unshift(notification);
+            if (notifications.length > 50) {
+                notifications = notifications.slice(0, 50);
+            }
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            updateNotificationBadge();
+        }
+
+        function updateNotificationBadge() {
+            const unreadCount = notifications.filter(n => !n.read).length;
+            const notifBtn = document.getElementById('notifications-btn');
+            if (unreadCount > 0) {
+                notifBtn.classList.add('notification-badge');
+            } else {
+                notifBtn.classList.remove('notification-badge');
+            }
+        }
+
+        function markNotificationsAsRead() {
+            notifications.forEach(n => n.read = true);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            updateNotificationBadge();
+        }
+
+        function renderNotifications() {
+            const list = document.getElementById('notifications-list');
+            
+            if (notifications.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔔</div><p>No notifications yet</p></div>';
+                return;
+            }
+
+            list.innerHTML = notifications.map(notif => {
+                const date = new Date(notif.date);
+                const timeAgo = getTimeAgo(date);
+                const icon = notif.type === 'success' ? '✓' : 
+                            notif.type === 'warning' ? '⚠️' : 
+                            notif.type === 'danger' ? '❌' : 'ℹ️';
+                
+                return `
+                    <div class="message-item" style="margin-bottom: 12px;">
+                        <div class="message-text">
+                            ${icon} ${notif.message}
+                        </div>
+                        <div class="message-meta">
+                            <span>${timeAgo}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            
+            if (seconds < 60) return 'Just now';
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+            return date.toLocaleDateString();
+        }
+
+        // PREMIUM MODAL
+        function showPremiumModal() {
+            if (isPremium) return;
+            document.getElementById('premium-modal').classList.add('active');
+        }
+
+        function closePremiumModal() {
+            document.getElementById('premium-modal').classList.remove('active');
+        }
+
+        function simulatePremiumUpgrade() {
+            isPremium = true;
+            localStorage.setItem('isPremium', JSON.stringify(isPremium));
+            closePremiumModal();
+            updatePremiumUI();
+            addNotification('🎉 Premium activated! All features unlocked.', 'success');
+        }
+
+        function updatePremiumUI() {
+            const planNameEl = document.getElementById('plan-name');
+            
+            if (isPremium) {
+                planNameEl.innerHTML = '<span style="background: linear-gradient(135deg, var(--premium-gold), #FFA000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">⭐ Premium</span>';
+                
+                // Unlock premium cards
+                document.querySelectorAll('.card.premium-locked').forEach(card => {
+                    card.classList.remove('premium-locked');
+                    card.onclick = null;
+                });
+                
+                // Unlock calendar nav
+                document.querySelector('[data-section="calendar"]').classList.remove('premium-locked');
+                
+                // Enable category dropdown
+                const categorySelect = document.getElementById('expense-category');
+                categorySelect.disabled = false;
+                categorySelect.innerHTML = EXPENSE_CATEGORIES.map(cat => 
+                    `<option value="${cat}">${cat}</option>`
+                ).join('');
+                
+                // Hide roommate limit warning
+                document.getElementById('roommate-limit-warning').style.display = 'none';
+                
+            } else {
+                planNameEl.innerHTML = '<span style="color: var(--text-secondary);">Free</span>';
+            }
+            
+            renderExpenses();
+            renderChores();
+            renderSupplies();
+            renderMessages();
+        }
+
+        // NAVIGATION
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const section = btn.dataset.section;
+                
+                if (!isPremium && btn.classList.contains('premium-locked')) {
+                    showPremiumModal();
+                    return;
+                }
+                
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(section).classList.add('active');
+            });
+        });
+
+        // ROOMMATE MANAGEMENT
+        function addRoommate() {
+            const name = document.getElementById('roommate-name').value.trim();
+            if (!name) {
+                alert('Please enter a name');
+                return;
+            }
+            if (roommates.includes(name)) {
+                alert('Roommate already exists');
+                return;
+            }
+            
+            if (!isPremium && roommates.length >= FREE_ROOMMATE_LIMIT) {
+                document.getElementById('roommate-limit-warning').style.display = 'block';
+                showPremiumModal();
+                return;
+            }
+            
+            roommates.push(name);
+            localStorage.setItem('roommates', JSON.stringify(roommates));
+            document.getElementById('roommate-name').value = '';
+            renderRoommates();
+            updateRoommateDropdowns();
+            addNotification(`👤 ${name} added as roommate`, 'success');
+        }
+
+        function removeRoommate(name) {
+            if (confirm(`Remove ${name} from roommates?`)) {
+                roommates = roommates.filter(r => r !== name);
+                localStorage.setItem('roommates', JSON.stringify(roommates));
+                renderRoommates();
+                updateRoommateDropdowns();
+                addNotification(`👤 ${name} removed`, 'info');
+                
+                if (roommates.length < FREE_ROOMMATE_LIMIT) {
+                    document.getElementById('roommate-limit-warning').style.display = 'none';
+                }
+            }
+        }
+
+        function renderRoommates() {
+            const list = document.getElementById('roommate-list');
+            if (roommates.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-secondary); margin-top: 16px;">No roommates added yet</p>';
+                return;
+            }
+            list.innerHTML = roommates.map(name => `
+                <div class="roommate-tag">
+                    ${name}
+                    <span class="remove-roommate" onclick="removeRoommate('${name}')">×</span>
+                </div>
+            `).join('');
+        }
+
+        function updateRoommateDropdowns() {
+            const selects = ['expense-payer', 'chore-assigned', 'message-author'];
+            selects.forEach(id => {
+                const select = document.getElementById(id);
+                select.innerHTML = roommates.length === 0 
+                    ? '<option value="">Add roommates first</option>'
+                    : roommates.map(name => `<option value="${name}">${name}</option>`).join('');
+            });
+
+            const splitDiv = document.getElementById('expense-split');
+            splitDiv.innerHTML = roommates.length === 0
+                ? '<p style="color: var(--text-secondary);">Add roommates first</p>'
+                : roommates.map(name => `
+                    <label class="checkbox-label haptic">
+                        <input type="checkbox" value="${name}" checked>
+                        ${name}
+                    </label>
+                `).join('');
+        }
+
+        // EXPENSE MANAGEMENT
+        function addExpense() {
+            const title = document.getElementById('expense-title').value.trim();
+            const amount = parseFloat(document.getElementById('expense-amount').value);
+            const payer = document.getElementById('expense-payer').value;
+            const splitCheckboxes = document.querySelectorAll('#expense-split input:checked');
+            const splitWith = Array.from(splitCheckboxes).map(cb => cb.value);
+            const category = isPremium ? document.getElementById('expense-category').value : '';
+
+            if (!title || !amount || !payer || splitWith.length === 0) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const expense = {
+                id: Date.now(),
+                title,
+                amount,
+                payer,
+                splitWith,
+                category,
+                date: new Date().toISOString()
+            };
+
+            expenses.push(expense);
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+
+            document.getElementById('expense-title').value = '';
+            document.getElementById('expense-amount').value = '';
+            renderExpenses();
+            
+            if (settings.expenseAlerts) {
+                addNotification(`💰 ${payer} added expense: ${title} ($${amount.toFixed(2)})`, 'info');
+            }
+        }
+
+        function deleteExpense(id) {
+            if (confirm('Delete this expense?')) {
+                expenses = expenses.filter(e => e.id !== id);
+                localStorage.setItem('expenses', JSON.stringify(expenses));
+                renderExpenses();
+                addNotification('Expense deleted', 'info');
+            }
+        }
+
+        function renderExpenses() {
+            const list = document.getElementById('expense-list');
+
+            if (expenses.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💰</div><p>No expenses yet</p></div>';
+            } else {
+                list.innerHTML = expenses.slice().reverse().slice(0, 10).map(expense => {
+                    const date = new Date(expense.date).toLocaleDateString();
+                    return `
+                        <div class="expense-item">
+                            <div class="expense-info">
+                                <div class="expense-title">
+                                    ${expense.title}
+                                    ${isPremium && expense.category ? `<span class="expense-category">${expense.category}</span>` : ''}
+                                </div>
+                                <div class="expense-details">
+                                    ${expense.payer} • ${date}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="expense-amount">$${expense.amount.toFixed(2)}</div>
+                                <button class="btn btn-danger btn-small haptic" style="margin-top: 8px;" onclick="deleteExpense(${expense.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // CHORE MANAGEMENT
+        function addChore() {
+            const name = document.getElementById('chore-name').value.trim();
+            const assigned = document.getElementById('chore-assigned').value;
+            const date = document.getElementById('chore-date').value;
+            const recurring = document.getElementById('chore-recurring').checked;
+
+            if (!name || !assigned || !date) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const chore = {
+                id: Date.now(),
+                name,
+                assigned,
+                date,
+                recurring,
+                done: false,
+                completions: 0
+            };
+
+            chores.push(chore);
+            localStorage.setItem('chores', JSON.stringify(chores));
+
+            document.getElementById('chore-name').value = '';
+            document.getElementById('chore-date').value = '';
+            document.getElementById('chore-recurring').checked = false;
+            renderChores();
+            
+            if (settings.choreReminders) {
+                addNotification(`🧹 New chore: ${name} assigned to ${assigned}`, 'info');
+            }
+        }
+
+        function toggleChore(id) {
+            const chore = chores.find(c => c.id === id);
+            if (chore) {
+                chore.done = !chore.done;
+                if (chore.done) {
+                    chore.completions = (chore.completions || 0) + 1;
+                    addNotification(`✓ ${chore.name} completed by ${chore.assigned}`, 'success');
+                    if (chore.recurring) {
+                        const currentDate = new Date(chore.date);
+                        currentDate.setDate(currentDate.getDate() + 7);
+                        chore.date = currentDate.toISOString().split('T')[0];
+                        chore.done = false;
+                    }
+                }
+                localStorage.setItem('chores', JSON.stringify(chores));
+                renderChores();
+            }
+        }
+
+        function deleteChore(id) {
+            if (confirm('Delete this chore?')) {
+                chores = chores.filter(c => c.id !== id);
+                localStorage.setItem('chores', JSON.stringify(chores));
+                renderChores();
+            }
+        }
+
+        function getChoreStatus(chore) {
+            if (chore.done) return 'done';
+            const today = new Date().toISOString().split('T')[0];
+            const choreDate = chore.date;
+            if (choreDate === today) return 'due-today';
+            if (choreDate < today) return 'overdue';
+            return '';
+        }
+
+        function renderChores() {
+            const list = document.getElementById('chore-list');
+            
+            if (chores.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🧹</div><p>No chores yet</p></div>';
+                return;
+            }
+
+            const sortedChores = chores.slice().sort((a, b) => {
+                if (a.done !== b.done) return a.done ? 1 : -1;
+                return new Date(a.date) - new Date(b.date);
+            });
+
+            list.innerHTML = sortedChores.map(chore => {
+                const status = getChoreStatus(chore);
+                const date = new Date(chore.date).toLocaleDateString();
+                
+                return `
+                    <div class="chore-item ${status}">
+                        <div class="chore-info">
+                            <div class="chore-name">${chore.name}</div>
+                            <div class="chore-details">
+                                ${chore.assigned} • ${date}
+                                ${status === 'due-today' ? ' • <span class="status-badge warning">Due Today</span>' : ''}
+                                ${status === 'overdue' ? ' • <span class="status-badge danger">Overdue</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="chore-actions">
+                            <button class="btn ${chore.done ? 'btn-secondary' : 'btn-success'} btn-small haptic" onclick="toggleChore(${chore.id})">
+                                ${chore.done ? 'Undo' : '✓'}
+                            </button>
+                            <button class="btn btn-danger btn-small haptic" onclick="deleteChore(${chore.id})">×</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // SUPPLY MANAGEMENT
+        function addSupply() {
+            const name = document.getElementById('supply-name').value.trim();
+            const quantity = parseInt(document.getElementById('supply-quantity').value);
+            const threshold = parseInt(document.getElementById('supply-threshold').value);
+
+            if (!name || isNaN(quantity) || isNaN(threshold)) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const supply = {
+                id: Date.now(),
+                name,
+                quantity,
+                threshold
+            };
+
+            supplies.push(supply);
+            localStorage.setItem('supplies', JSON.stringify(supplies));
+
+            document.getElementById('supply-name').value = '';
+            document.getElementById('supply-quantity').value = '10';
+            document.getElementById('supply-threshold').value = '3';
+            renderSupplies();
+            addNotification(`📦 ${name} added to inventory`, 'success');
+        }
+
+        function updateSupplyQuantity(id, change) {
+            const supply = supplies.find(s => s.id === id);
+            if (supply) {
+                const oldQuantity = supply.quantity;
+                supply.quantity = Math.max(0, supply.quantity + change);
+                
+                // Check for low stock alert
+                if (settings.stockAlerts && supply.quantity <= supply.threshold && oldQuantity > supply.threshold) {
+                    addNotification(`⚠️ ${supply.name} is running low!`, 'warning');
+                }
+                
+                localStorage.setItem('supplies', JSON.stringify(supplies));
+                renderSupplies();
+            }
+        }
+
+        function deleteSupply(id) {
+            if (confirm('Delete this supply?')) {
+                supplies = supplies.filter(s => s.id !== id);
+                localStorage.setItem('supplies', JSON.stringify(supplies));
+                renderSupplies();
+            }
+        }
+
+        function getSupplyStatus(supply) {
+            if (supply.quantity === 0) return 'out';
+            if (supply.quantity <= supply.threshold) return 'low';
+            return 'good';
+        }
+
+        function renderSupplies() {
+            const list = document.getElementById('supply-list');
+            
+            if (supplies.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📦</div><p>No supplies tracked yet</p></div>';
+                return;
+            }
+
+            const sortedSupplies = supplies.slice().sort((a, b) => {
+                const statusOrder = { out: 0, low: 1, good: 2 };
+                return statusOrder[getSupplyStatus(a)] - statusOrder[getSupplyStatus(b)];
+            });
+
+            list.innerHTML = sortedSupplies.map(supply => {
+                const status = getSupplyStatus(supply);
+                let statusBadge = '';
+                
+                if (status === 'out') {
+                    statusBadge = '<span class="status-badge danger">Out of Stock</span>';
+                } else if (status === 'low') {
+                    statusBadge = '<span class="status-badge warning">Low Stock</span>';
+                } else {
+                    statusBadge = '<span class="status-badge success">In Stock</span>';
+                }
+                
+                return `
+                    <div class="supply-item ${status}">
+                        <div class="supply-info">
+                            <div class="supply-name">${supply.name}</div>
+                            <div class="supply-status">
+                                Qty: ${supply.quantity} • ${statusBadge}
+                            </div>
+                        </div>
+                        <div class="supply-actions">
+                            <button class="btn btn-secondary btn-small haptic" onclick="updateSupplyQuantity(${supply.id}, -1)">−</button>
+                            <button class="btn btn-secondary btn-small haptic" onclick="updateSupplyQuantity(${supply.id}, 1)">+</button>
+                            <button class="btn btn-danger btn-small haptic" onclick="deleteSupply(${supply.id})">×</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // MESSAGE MANAGEMENT
+        function addMessage() {
+            const author = document.getElementById('message-author').value;
+            const text = document.getElementById('message-text').value.trim();
+
+            if (!author || !text) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const message = {
+                id: Date.now(),
+                author,
+                text,
+                date: new Date().toISOString()
+            };
+
+            messages.unshift(message);
+            localStorage.setItem('messages', JSON.stringify(messages));
+
+            document.getElementById('message-text').value = '';
+            renderMessages();
+            addNotification(`💬 ${author} posted a message`, 'info');
+        }
+
+        function deleteMessage(id) {
+            if (confirm('Delete this message?')) {
+                messages = messages.filter(m => m.id !== id);
+                localStorage.setItem('messages', JSON.stringify(messages));
+                renderMessages();
+            }
+        }
+
+        function renderMessages() {
+            const list = document.getElementById('message-list');
+            
+            if (messages.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💬</div><p>No messages yet</p></div>';
+                return;
+            }
+
+            list.innerHTML = messages.map(message => {
+                const date = new Date(message.date);
+                const dateStr = date.toLocaleDateString();
+                const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                return `
+                    <div class="message-item">
+                        <div class="message-text">${message.text}</div>
+                        <div class="message-meta">
+                            <span><strong>${message.author}</strong> • ${dateStr} ${timeStr}</span>
+                            <button class="btn btn-danger btn-small haptic" onclick="deleteMessage(${message.id})">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // INITIALIZATION
+        function init() {
+            // Add default roommates if none exist
+            if (roommates.length === 0) {
+                roommates = ['Alex', 'Jordan', 'Sam'];
+                localStorage.setItem('roommates', JSON.stringify(roommates));
+            }
+
+            // Apply theme
+            applyTheme();
+            
+            // Update UI
+            updatePremiumUI();
+            renderRoommates();
+            updateRoommateDropdowns();
+            renderExpenses();
+            renderChores();
+            renderSupplies();
+            renderMessages();
+            updateNotificationBadge();
+
+            // Set default date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('chore-date').value = today;
+            
+            // Check roommate limit
+            if (!isPremium && roommates.length >= FREE_ROOMMATE_LIMIT) {
+                document.getElementById('roommate-limit-warning').style.display = 'block';
+            }
+            
+            // Welcome notification
+            if (notifications.length === 0) {
+                addNotification('👋 Welcome to Roommate Hub!', 'success');
+            }
+        }
+
+        // Close modals on background click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Run on page load
+        init();
+    </script>
+</body>
+</html>
